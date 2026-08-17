@@ -1,0 +1,20 @@
+{
+  "name": "character-lora-studio",
+  "interface": {
+    "displayName": "角色 LoRA Studio"
+  },
+  "plugins": [
+    {
+      "name": "character-lora-studio",
+      "source": {
+        "source": "local",
+        "path": "./plugins/character-lora-studio"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

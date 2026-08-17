@@ -1,0 +1,4 @@
+interface:
+  display_name: "角色 LoRA Studio"
+  short_description: "按固定规则设计、筛选、打标并导出角色 LoRA 数据集"
+  default_prompt: "使用 $character-lora-studio 为当前角色建立或继续可恢复的 LoRA 数据集流程。"

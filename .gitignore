@@ -1,0 +1,21 @@
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# Runtime caches and generated output
+__pycache__/
+*.py[cod]
+*.log
+tmp/
+temp/
+outputs/
+
+# Local Codex state
+.codex/

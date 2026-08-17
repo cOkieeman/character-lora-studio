@@ -1,0 +1,18 @@
+{
+  "name": "character-lora-studio",
+  "version": "0.1.0",
+  "description": "Persistent character LoRA workflow for design, curation, Booru tagging, regularization, training tests, and platform exports.",
+  "author": {
+    "name": "cOkieeman"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "角色 LoRA Studio",
+    "shortDescription": "可恢复的角色 LoRA 设计、筛选、打标与导出流程",
+    "longDescription": "将角色设计、训练图矩阵、筛选评分、Booru caption、正则集、Anima/Krea2 导出与 checkpoint 测试固化为可跨任务恢复的本地流程。",
+    "developerName": "cOkieeman",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "使用 $character-lora-studio 读取角色项目状态并继续下一阶段。"
+  }
+}

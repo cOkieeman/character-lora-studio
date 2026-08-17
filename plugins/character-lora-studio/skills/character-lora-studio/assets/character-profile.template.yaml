@@ -1,0 +1,45 @@
+schema_version: 1
+character_id: "{{CHARACTER_ID}}"
+display_name: "{{DISPLAY_NAME}}"
+trigger: "{{TRIGGER}}"
+target_platforms: []
+base_models: []
+
+forms:
+  human:
+    enabled: true
+    caption_prefix: "1girl, {{TRIGGER}}, solo"
+  alternate:
+    enabled: false
+    separate_lora: true
+    tag: ""
+
+identity:
+  fixed: []
+  controllable: []
+  variable: []
+  forbidden_drift: []
+
+outfits:
+  default:
+    name: ""
+    target_images: 0
+    tags: []
+  variants: []
+
+caption:
+  language: "en"
+  style: "booru_tags"
+  remove_tags:
+    - newest
+    - safe
+    - masterpiece
+    - best quality
+
+regularization:
+  enabled: false
+  target_images: 0
+  forbidden_tags:
+    - "{{TRIGGER}}"
+
+notes: []
