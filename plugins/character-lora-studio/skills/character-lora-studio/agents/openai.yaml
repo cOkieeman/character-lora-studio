@@ -1,4 +1,4 @@
 interface:
   display_name: "角色 LoRA Studio"
-  short_description: "按固定规则设计、筛选、打标并导出角色 LoRA 数据集"
-  default_prompt: "使用 $character-lora-studio 为当前角色建立或继续可恢复的 LoRA 数据集流程。"
+  short_description: "按模型族管理角色与衣服 LoRA 数据集、配置和导出"
+  default_prompt: "使用 $character-lora-studio 为当前角色或衣服建立可恢复的 Anima/Krea 2 LoRA 流程。"

@@ -1,9 +1,22 @@
-schema_version: 1
+schema_version: 2
 character_id: "{{CHARACTER_ID}}"
 display_name: "{{DISPLAY_NAME}}"
 trigger: "{{TRIGGER}}"
+concept:
+  type: character
+  outfit_trigger: ""
+
 target_platforms: []
-base_models: []
+base_models:
+  anima: ""
+  krea2_train: "Krea-2-Raw"
+  krea2_test: "Krea-2-Turbo"
+
+hardware:
+  gpu_name: ""
+  vram_gb: 0
+  ram_gb: 0
+  storage_free_gb: 0
 
 forms:
   human:
@@ -20,6 +33,12 @@ identity:
   variable: []
   forbidden_drift: []
 
+outfit_identity:
+  fixed: []
+  controllable: []
+  variable_wearer: []
+  forbidden_drift: []
+
 outfits:
   default:
     name: ""
@@ -27,19 +46,41 @@ outfits:
     tags: []
   variants: []
 
-caption:
-  language: "en"
-  style: "booru_tags"
-  remove_tags:
-    - newest
-    - safe
-    - masterpiece
-    - best quality
+caption_profiles:
+  anima:
+    enabled: false
+    language: en
+    style: booru_tags
+    prefix: "1girl, {{TRIGGER}}, solo"
+    remove_tags:
+      - newest
+      - safe
+      - masterpiece
+      - best quality
+  krea2:
+    enabled: false
+    language: en
+    style: natural_language
+    trigger_pattern: "{{TRIGGER}}"
+    max_tokens: 512
+
+training_profiles:
+  anima:
+    configured: false
+    studio_version: ""
+  krea2:
+    configured: false
+    studio_version: ""
+    transformer_variant: raw_fp8
+    text_encoder_variant: fp8
+    blocks_to_swap: 0
+    smoke_test_steps: 10
 
 regularization:
   enabled: false
   target_images: 0
   forbidden_tags:
     - "{{TRIGGER}}"
+  forbidden_concepts: []
 
 notes: []

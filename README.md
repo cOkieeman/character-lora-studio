@@ -1,16 +1,17 @@
 # 角色 LoRA Studio
 
-一个面向 Codex 的角色 LoRA 工作流插件。它把角色设定、数据集矩阵、图片筛选、Booru 打标、正则集、训练导出和 checkpoint 测试固化为可恢复的本地流程，避免任务上下文变化后丢失关键决策。
+一个面向 Codex 的角色、衣服、角色+衣服与画风 LoRA 工作流插件。它把概念设定、数据集矩阵、图片筛选、Anima/Krea 2 caption、正则集、硬件配置、训练导出和 checkpoint 测试固化为可恢复的本地流程，避免任务上下文变化后丢失关键决策。
 
 ## 主要能力
 
-- 新建或恢复角色 LoRA 项目
-- 维护角色设定、触发词、固定特征和可控标签
-- 规划景别、视角、动作、服饰与画风覆盖
+- 新建或恢复角色、衣服、角色+衣服或画风 LoRA 项目
+- 维护触发词、固定概念、可控概念和变量
+- 规划角色镜头或衣服穿着者、视角、动作与结构覆盖
 - 筛选候选图并保留淘汰原因
-- 生成和审查 Booru 风格英文 caption
-- 建立不含角色身份特征的正则集
-- 导出 AnimaLoraStudio、Krea2 等训练包
+- 分别生成 Anima Booru caption 与 Krea 2 英文自然语言 caption
+- 建立不含目标身份或目标服装组合的正则集
+- 按 GPU/VRAM/RAM 生成并审查 AnimaLoraStudio profile
+- 导出 Anima、Krea 2、老师交付与 Civitai 训练包
 - 使用固定测试提示词比较不同 epoch 或 step
 
 ## 安装
@@ -37,6 +38,12 @@ codex plugin add character-lora-studio@character-lora-studio
 使用 $character-lora-studio 为这个角色建立 LoRA 数据集项目。
 ```
 
+建立独立衣服 LoRA：
+
+```text
+使用 $character-lora-studio 为这套服装建立 outfit LoRA 项目，目标模型族为 Krea 2，触发词为 mirellenavyoutfit。
+```
+
 也可以让它从已有项目继续：
 
 ```text
@@ -50,12 +57,16 @@ codex plugin add character-lora-studio@character-lora-studio
 ```
 
 ```text
-使用 $character-lora-studio 按 Booru 标签规则检查 caption，并导出 Anima 和 Krea2 训练包。
+使用 $character-lora-studio 为同一批图片分别生成 Anima Booru caption 和 Krea 2 英文自然语言 caption，并分目录导出。
+```
+
+```text
+使用 $character-lora-studio 根据 RTX 5060 Ti 16GB、64GB RAM 和当前 AnimaLoraStudio 版本生成 Krea 2 烟雾测试配置，不要启动完整训练。
 ```
 
 ## 项目初始化
 
-插件附带 PowerShell 初始化脚本，可建立标准目录、角色配置、项目状态和图片清单。通常只需让 Codex “为角色初始化 LoRA 项目”，Codex 会从当前 Skill 安装目录解析脚本路径；手动调用时可使用：
+插件附带 PowerShell 初始化脚本，可建立标准目录、概念配置、项目状态和图片清单。通常只需让 Codex“初始化 LoRA 项目”，Codex 会从当前 Skill 安装目录解析脚本路径；手动调用时可使用：
 
 ```powershell
 & "<插件目录>\skills\character-lora-studio\scripts\init-character-lora-project.ps1" `
@@ -71,8 +82,11 @@ codex plugin add character-lora-studio@character-lora-studio
 
 - 文件系统是项目状态的唯一事实来源。
 - 原始素材保持不变，裁切、去背景和修改版放入派生目录。
-- 每张训练图必须配有同名 `.txt` caption。
-- 训练 caption 使用英文规范标签，中文仅用于审查说明。
+- 每张导出训练图必须配有同名 `.txt` caption。
+- Anima 使用英文 Booru tags；Krea 2 使用英文自然语言，二者分目录保存。
+- Outfit-only 数据使用多个穿着者，不混入目标角色触发词。
+- 更换模型族时创建新 trainer version，不原地复用已完成配置。
+- 完整训练前先做 5–10 step 烟雾测试。
 - 淘汰图不永久删除，需记录淘汰原因。
 - 不在插件仓库中保存角色私有素材、训练产物、API key 或账号凭据。
 
@@ -86,4 +100,4 @@ plugins/character-lora-studio/
 README.md
 ```
 
-当前版本：`0.1.0`
+当前版本：`0.2.0`

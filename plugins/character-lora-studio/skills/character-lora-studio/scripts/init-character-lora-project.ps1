@@ -82,7 +82,7 @@ New-FileFromTemplate `
 
 $inventoryPath = Join-Path $resolvedRoot '00_项目管理\图片清单.csv'
 if (-not (Test-Path -LiteralPath $inventoryPath)) {
-    'file,category,status,identity_score,face_score,hair_score,anatomy_score,outfit_score,composition_score,value_score,reject_reason,caption_status,notes' |
+    'file,category,status,concept_type,target_family,identity_score,face_score,hair_score,anatomy_score,outfit_score,composition_score,value_score,reject_reason,anima_caption_status,krea2_caption_status,notes' |
         Set-Content -LiteralPath $inventoryPath -Encoding UTF8
     Write-Host "[CREATE] $inventoryPath"
 }
