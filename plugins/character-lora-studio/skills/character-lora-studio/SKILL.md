@@ -70,7 +70,7 @@ Before captioning, exporting, or training, read the target family and never reus
 - When the same images target both families, export two separate image-caption trees. Never overwrite the project's reviewed source captions in place.
 - Krea 2 trains on Raw weights. Turbo is for testing and inference, not a training base.
 
-Read [captions.md](references/captions.md) and [training-profiles.md](references/training-profiles.md) before generating captions or a trainer configuration.
+Read [captions.md](references/captions.md), [concept-binding.md](references/concept-binding.md), and [training-profiles.md](references/training-profiles.md) before generating captions or a trainer configuration.
 
 ## Workflow
 
@@ -129,7 +129,7 @@ Read [captions.md](references/captions.md) and [training-profiles.md](references
 - Never expose API keys or account credentials.
 - Do not start training, upload a model, or publish a post unless the user explicitly asks.
 
-Read [exports.md](references/exports.md) before preparing AnimaLoraStudio, Krea 2, Krea2 teacher handoff, or Civitai artifacts.
+Read [exports.md](references/exports.md) before preparing AnimaLoraStudio, Krea 2 training handoff, or Civitai artifacts.
 
 ### 8. Test Checkpoints
 
@@ -159,6 +159,6 @@ When context is missing, read project state first and continue from verified dis
 - Preserve user originals and existing edits.
 - Use non-destructive, versioned outputs.
 - Mask secrets and never print credential-bearing URLs.
-- Treat teacher screenshots, trainer documentation, and past advice as versioned project guidance, not universal model behavior.
+- Treat reference screenshots, trainer documentation, and past advice as versioned project guidance, not universal model behavior.
 - State uncertainty when trainer version, base model, caption parser, or platform behavior is unverified.
 - Never assume a configuration is safe solely because another GPU with the same VRAM completed it.

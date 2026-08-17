@@ -11,7 +11,7 @@
 - 分别生成 Anima Booru caption 与 Krea 2 英文自然语言 caption
 - 建立不含目标身份或目标服装组合的正则集
 - 按 GPU/VRAM/RAM 生成并审查 AnimaLoraStudio profile
-- 导出 Anima、Krea 2、老师交付与 Civitai 训练包
+- 导出 Anima、Krea 2 训练交付与 Civitai 发布包
 - 使用固定测试提示词比较不同 epoch 或 step
 
 ## 安装
