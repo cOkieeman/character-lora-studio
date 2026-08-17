@@ -55,7 +55,7 @@ codex plugin add character-lora-studio@character-lora-studio
 
 ## 项目初始化
 
-插件附带 PowerShell 初始化脚本，可建立标准目录、角色配置、项目状态和图片清单：
+插件附带 PowerShell 初始化脚本，可建立标准目录、角色配置、项目状态和图片清单。通常只需让 Codex “为角色初始化 LoRA 项目”，Codex 会从当前 Skill 安装目录解析脚本路径；手动调用时可使用：
 
 ```powershell
 & "<插件目录>\skills\character-lora-studio\scripts\init-character-lora-project.ps1" `

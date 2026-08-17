@@ -12,10 +12,10 @@ Use the filesystem as the source of truth. Never rely on chat history alone for 
 1. Locate the character project root.
 2. Read `项目状态.md`, `角色配置.yaml`, and `图片清单.csv` when present.
 3. Verify current folders and counts from disk before reporting status.
-4. For a new project, run:
+4. For a new project, resolve the current Skill directory from the loaded Skill path, then run the script by absolute path. Do not rely on `$PSScriptRoot` in an interactive PowerShell session:
 
 ```powershell
-& "$PSScriptRoot/scripts/init-character-lora-project.ps1" `
+& '<SKILL_ROOT>\scripts\init-character-lora-project.ps1' `
   -Root '<项目目录>' `
   -CharacterId '<ASCII_ID>' `
   -DisplayName '<角色名>' `
