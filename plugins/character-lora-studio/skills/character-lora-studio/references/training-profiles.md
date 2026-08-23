@@ -116,6 +116,36 @@ tag_dropout: 0.0
 
 烟雾测试通过只证明链路可运行，不证明数据或质量配置正确。
 
+## 放行顺序
+
+正式训练前按以下顺序建立不可混淆的版本：
+
+1. **Dataset freeze**：确定正式图片，验证解码、尺寸、哈希、近重复、淘汰区隔离和视觉联系表。
+2. **Caption freeze**：逐图审查完成，统计触发词和关键 tag，保存修改前后快照。
+3. **Regularization freeze**：记录来源、筛选规则、数量、caption、哈希和与训练集的交叉重复检查。
+4. **Config freeze**：记录 trainer version、模型文件、硬件、模型族、rank、学习率、batch、累积、epoch、保存和采样间隔。
+5. **Cache build**：仅从当前冻结版本建立 latent/text cache。
+6. **5–10 step smoke**：确认加载、编码、cache、optimizer、checkpoint、样图和资源释放。
+7. **Full run authorization**：smoke 通过后仍需用户单独授权完整训练。
+8. **Checkpoint comparison**：固定 seed、prompt 和推理设置比较早、中、晚 checkpoint，再选择最终交付。
+
+以下任一变化都会使旧 smoke 或 cache 失效：
+
+- 替换、修图、裁切或重新编码图片
+- 修改 caption、触发词、token 顺序或 `keep_tokens`
+- 修改正则图片或正则 caption
+- 切换模型族、底模、VAE、文本编码器或影响 latent/text cache 的设置
+
+不要通过手工改数据库状态或复制旧 cache 来绕过重建。
+
+## Epoch 与 checkpoint
+
+- Epoch 配置是训练上限，不等于最后一轮一定最好。
+- 保存间隔应能覆盖早期、中央和末期，避免只留下最终 checkpoint。
+- 数据量、repeat、batch 和 grad accumulation 会共同改变总 optimizer steps；不要只比较 epoch 数字。
+- 比较 checkpoint 时固定 seed、prompt、negative、sampler、steps、CFG、基础模型和 LoRA 权重。
+- 至少测试 trigger-only、身份上限、签名服装、换装、不同镜头和不同比重。
+
 ## 全量训练前记录
 
 - GPU 型号、VRAM、RAM、驱动、Torch 和 CUDA

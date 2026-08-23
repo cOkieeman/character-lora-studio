@@ -61,6 +61,12 @@ Learn rendering language while keeping subjects and scenes varied. Caption conte
 
 Read [dataset-matrix.md](references/dataset-matrix.md) before setting counts and coverage.
 
+For an Anima character project, also read
+[anima-character-workflow.md](references/anima-character-workflow.md) before
+generating candidates, preprocessing images, editing tags, or configuring the
+trainer. It defines the detailed order of operations and the gates between
+stages.
+
 ## Model Family Gate
 
 Before captioning, exporting, or training, read the target family and never reuse one family's caption or saved training config as the other family's profile.
@@ -94,15 +100,20 @@ Read [captions.md](references/captions.md), [concept-binding.md](references/conc
 - Vary pose, camera, crop, background, lighting, wearer, and compatible style intentionally.
 - Score identity or outfit fidelity, anatomy, visible structure, composition, and dataset value separately.
 - Reject duplicates, broken anatomy, cropped essentials, inconsistent colors or structure, text, watermarks, and concept-confusing details.
+- Decide the non-negotiable identity or outfit features before generation. A candidate that changes one of those anchors is not made valid by a good composition.
+- Preserve generated originals. Put watermark removal, inpainting, cropping, and local paint-over results in a derived folder and retain source-to-derived provenance.
+- Use local correction only when the target feature can be repaired without changing identity, anatomy, or the intended crop. Otherwise reject and replace the candidate.
 - Keep rejection reasons in `图片清单.csv` and retain rejected pairs under `05_淘汰区`.
 
 ### 4. Caption
 
 - Pair each exported image with exactly one same-stem `.txt` file.
 - Apply per-image facts; do not paste a universal caption across the dataset.
+- Treat automatic tagging as a draft. Review every image-caption pair and remove wrong, invisible, contradictory, source, artist, quality, watermark, and duplicate tags.
 - Keep Chinese explanations in review documents, not in training `.txt` files unless a verified trainer explicitly requires Chinese natural language.
 - Generate and review Anima and Krea 2 captions independently.
 - Bind only intentional invariants to the trigger. Describe variables so they remain prompt-controllable.
+- Freeze trigger spelling, token order, and the intended `keep_tokens` prefix before export. Recompute caches after any caption change.
 
 ### 5. Build Regularization
 
@@ -113,19 +124,28 @@ Read [captions.md](references/captions.md), [concept-binding.md](references/conc
 - Remove broken anatomy, unintended NSFW, multiple-subject contamination, chaotic quality, watermarks, and duplicates.
 - Keep regularization captions family-compatible and export the curated set separately for reuse.
 
+Read [regularization.md](references/regularization.md) before collecting or
+replacing a regularization set. Test AI prior, Booru-sourced, and hybrid sets as
+separate versioned candidates; never silently mix sources and call the result
+validated.
+
 ### 6. Configure And Smoke Test
 
 - Inspect the actual GPU model, VRAM, RAM, free storage, trainer version, and installed weights.
+- Freeze and hash the selected training pairs, captions, regularization pairs, and config before building caches.
 - Create a new trainer version when changing model families. Do not mutate a completed Anima version into Krea 2 in place.
 - Recompute family defaults and review every carried explicit field.
 - On Krea 2, verify Raw base, Qwen3-VL text encoder, `krea2_shift`, SDPA, text cache, and hardware-appropriate block swap.
 - Run a 5–10 step smoke test before full training. Confirm model loading, caption encoding, latent cache, first optimizer step, checkpoint write, and memory recovery.
+- A smoke test validates the execution chain only. It does not approve dataset quality, regularization quality, epoch count, or the final checkpoint.
 
 ### 7. Export And Train
 
 - Validate decodability, dimensions, pairs, hashes, caption family, trigger spelling, and rejected-set separation.
+- Invalidate and rebuild latent or text caches whenever an image, caption, preprocessing result, model family, or cache-affecting setting changes.
 - Export platform- and family-specific packages without silently changing the source dataset.
 - Preserve exact YAML, model hashes or filenames, sample prompts, negative prompts, seeds, and trainer version.
+- Save enough intermediate checkpoints to compare early, middle, and late behavior. Treat the configured epoch count as a ceiling, not an automatic final-checkpoint choice.
 - Never expose API keys or account credentials.
 - Do not start training, upload a model, or publish a post unless the user explicitly asks.
 
