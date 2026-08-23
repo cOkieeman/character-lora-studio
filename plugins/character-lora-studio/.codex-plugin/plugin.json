@@ -1,6 +1,6 @@
 {
   "name": "character-lora-studio",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Persistent character and outfit LoRA workflow with Anima and Krea 2 caption, training, regularization, testing, and export profiles.",
   "author": {
     "name": "cOkieeman"

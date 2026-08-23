@@ -33,7 +33,9 @@ $directories = @(
     '07_导出\Krea2',
     '07_导出\正则复用包',
     '08_测试样图',
-    '09_训练产物'
+    '08_丹炉导入',
+    '09_训练产物',
+    'outputs'
 )
 
 [System.IO.Directory]::CreateDirectory($resolvedRoot) | Out-Null
@@ -79,6 +81,18 @@ New-FileFromTemplate `
 New-FileFromTemplate `
     -TemplatePath (Join-Path $assetRoot 'character-profile.template.yaml') `
     -DestinationPath (Join-Path $resolvedRoot '00_项目管理\角色配置.yaml')
+
+New-FileFromTemplate `
+    -TemplatePath (Join-Path $assetRoot 'task_plan.template.md') `
+    -DestinationPath (Join-Path $resolvedRoot 'task_plan.md')
+
+New-FileFromTemplate `
+    -TemplatePath (Join-Path $assetRoot 'findings.template.md') `
+    -DestinationPath (Join-Path $resolvedRoot 'findings.md')
+
+New-FileFromTemplate `
+    -TemplatePath (Join-Path $assetRoot 'progress.template.md') `
+    -DestinationPath (Join-Path $resolvedRoot 'progress.md')
 
 $inventoryPath = Join-Path $resolvedRoot '00_项目管理\图片清单.csv'
 if (-not (Test-Path -LiteralPath $inventoryPath)) {

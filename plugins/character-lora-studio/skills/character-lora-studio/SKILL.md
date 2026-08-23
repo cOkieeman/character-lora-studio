@@ -7,11 +7,19 @@ description: Build, resume, audit, tag, curate, regularize, configure, test, and
 
 Use the filesystem as the source of truth. Never rely on chat history alone for project decisions, counts, captions, trainer settings, or acceptance state.
 
+Every character project must use the standard single-character layout described in
+[project-layout.md](references/project-layout.md). The project root is the handoff and
+backup unit; do not create a second parallel `management` or `source_workspace` root for
+new work.
+
 ## Start Or Resume
 
-1. Locate the LoRA project root.
-2. Read `项目状态.md`, `角色配置.yaml`, and `图片清单.csv` when present.
-3. Verify folders, image-caption pairs, counts, target model families, concept type, trainer version, and hardware from disk before reporting status.
+1. Locate the LoRA project root and verify the standard directories.
+2. Read root `task_plan.md`, `findings.md`, and `progress.md`, then read
+   `00_项目管理/项目状态.md`, `00_项目管理/角色配置.yaml`, and
+   `00_项目管理/图片清单.csv` when present.
+3. Verify folders, image-caption pairs, counts, target model families, concept type,
+   trainer version, and hardware from disk before reporting status.
 4. For a new project, resolve the current Skill directory from the loaded Skill path and run the initializer by absolute path. Do not rely on `$PSScriptRoot` in an interactive PowerShell session:
 
 ```powershell
@@ -23,6 +31,11 @@ Use the filesystem as the source of truth. Never rely on chat history alone for 
 ```
 
 5. Update `项目状态.md` after every completed batch, decision, export, smoke test, or training run.
+
+If an older project has `management`, `source_workspace`, or a top-level
+`danlu_project`, treat it as a legacy layout. Preserve it, create the standard layout
+as a versioned copy, record the source path in `00_项目管理/迁移说明.md`, and validate
+the copy before using it as the canonical handoff root.
 
 Do not overwrite an existing project. Do not permanently delete rejected images; move image-caption pairs to a timestamped rejection folder and record the reason.
 
@@ -150,6 +163,10 @@ validated.
 - Do not start training, upload a model, or publish a post unless the user explicitly asks.
 
 Read [exports.md](references/exports.md) before preparing AnimaLoraStudio, Krea 2 training handoff, or Civitai artifacts.
+
+Keep portable trainer packages and database/project mirrors under `08_丹炉导入`;
+keep final LoRAs and upload descriptions under `07_导出`; never put latent/text
+cache files in the standard migration tree.
 
 ### 8. Test Checkpoints
 

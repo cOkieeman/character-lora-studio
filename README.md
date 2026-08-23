@@ -78,6 +78,30 @@ codex plugin add character-lora-studio@character-lora-studio
 
 脚本不会覆盖已经存在的项目管理文件。
 
+初始化后的项目统一采用单角色完整目录：
+
+```text
+角色项目/
+├─ 00_项目管理/
+├─ 01_原始素材/
+├─ 02_设计候选/
+├─ 03_训练候选/
+├─ 04_正式训练集/
+├─ 05_淘汰区/
+├─ 06_正则集/
+├─ 07_导出/
+├─ 08_测试样图/
+├─ 08_丹炉导入/
+├─ 09_训练产物/
+├─ outputs/
+├─ findings.md
+├─ progress.md
+└─ task_plan.md
+```
+
+旧项目如果存在 `management`、`source_workspace` 或顶层 `danlu_project`，
+会作为 legacy 来源保留；整理时复制进标准目录并验证，不自动删除旧内容。
+
 ## 工作原则
 
 - 文件系统是项目状态的唯一事实来源。
@@ -100,4 +124,4 @@ plugins/character-lora-studio/
 README.md
 ```
 
-当前版本：`0.2.0`
+当前版本：`0.2.1`
