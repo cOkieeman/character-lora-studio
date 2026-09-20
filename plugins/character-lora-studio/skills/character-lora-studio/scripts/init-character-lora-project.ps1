@@ -29,9 +29,9 @@ $directories = @(
     '04_正式训练集',
     '05_淘汰区',
     '06_正则集',
-    '07_导出\Anima',
-    '07_导出\Krea2',
-    '07_导出\正则复用包',
+    '07_导出/Anima',
+    '07_导出/Krea2',
+    '07_导出/正则复用包',
     '08_测试样图',
     '08_丹炉导入',
     '09_训练产物',
@@ -68,7 +68,12 @@ function New-FileFromTemplate {
 
     $content = Get-Content -LiteralPath $TemplatePath -Raw -Encoding UTF8
     foreach ($entry in $replacements.GetEnumerator()) {
-        $content = $content.Replace($entry.Key, $entry.Value)
+        $value = [string]$entry.Value
+        if ($TemplatePath.EndsWith('.yaml')) {
+            $quoted = ConvertTo-Json -InputObject $value -Compress
+            $value = $quoted.Substring(1, $quoted.Length - 2)
+        }
+        $content = $content.Replace($entry.Key, $value)
     }
     Set-Content -LiteralPath $DestinationPath -Value $content -Encoding UTF8
     Write-Host "[CREATE] $DestinationPath"
@@ -76,11 +81,11 @@ function New-FileFromTemplate {
 
 New-FileFromTemplate `
     -TemplatePath (Join-Path $assetRoot 'project-state.template.md') `
-    -DestinationPath (Join-Path $resolvedRoot '00_项目管理\项目状态.md')
+    -DestinationPath (Join-Path $resolvedRoot '00_项目管理/项目状态.md')
 
 New-FileFromTemplate `
     -TemplatePath (Join-Path $assetRoot 'character-profile.template.yaml') `
-    -DestinationPath (Join-Path $resolvedRoot '00_项目管理\角色配置.yaml')
+    -DestinationPath (Join-Path $resolvedRoot '00_项目管理/角色配置.yaml')
 
 New-FileFromTemplate `
     -TemplatePath (Join-Path $assetRoot 'task_plan.template.md') `
@@ -94,14 +99,16 @@ New-FileFromTemplate `
     -TemplatePath (Join-Path $assetRoot 'progress.template.md') `
     -DestinationPath (Join-Path $resolvedRoot 'progress.md')
 
-$inventoryPath = Join-Path $resolvedRoot '00_项目管理\图片清单.csv'
-if (-not (Test-Path -LiteralPath $inventoryPath)) {
-    'file,category,status,concept_type,target_family,identity_score,face_score,hair_score,anatomy_score,outfit_score,composition_score,value_score,reject_reason,anima_caption_status,krea2_caption_status,notes' |
-        Set-Content -LiteralPath $inventoryPath -Encoding UTF8
-    Write-Host "[CREATE] $inventoryPath"
+$ledgerTemplates = @{
+    'inventory.template.csv' = '图片清单.csv'
+    'batches.template.csv' = '生成批次.csv'
+    'coverage.template.csv' = '覆盖矩阵.csv'
+    'runs.template.csv' = '训练记录.csv'
 }
-else {
-    Write-Host "[SKIP] 已存在：$inventoryPath"
+foreach ($entry in $ledgerTemplates.GetEnumerator()) {
+    New-FileFromTemplate `
+        -TemplatePath (Join-Path $assetRoot $entry.Key) `
+        -DestinationPath (Join-Path (Join-Path $resolvedRoot '00_项目管理') $entry.Value)
 }
 
 Write-Host "[DONE] 角色 LoRA 项目已初始化：$resolvedRoot"

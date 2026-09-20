@@ -1,0 +1,1 @@
+image_id,file,category,status,source_kind,pack,batch_id,parent_id,prompt_file,reference_files,sha256,coverage_cell_id,near_duplicate_group,reject_reason,anima_caption_status,anima_caption_file,krea2_caption_status,krea2_caption_file,review_source,hub_image_review_status,hub_anima_review_status,hub_krea2_review_status,hub_record_id,notes

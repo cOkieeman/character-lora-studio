@@ -66,7 +66,7 @@ codex plugin add character-lora-studio@character-lora-studio
 
 ## 项目初始化
 
-插件附带 PowerShell 初始化脚本，可建立标准目录、概念配置、项目状态和图片清单。通常只需让 Codex“初始化 LoRA 项目”，Codex 会从当前 Skill 安装目录解析脚本路径；手动调用时可使用：
+插件附带 Python 3.9+（仅标准库）与 PowerShell 初始化入口，可建立标准目录、概念配置、项目状态、图片清单、生成批次、覆盖矩阵和训练记录。通常只需让 Codex“初始化 LoRA 项目”，Codex 会从当前 Skill 安装目录解析脚本路径；手动调用时可使用：
 
 ```powershell
 & "<插件目录>\skills\character-lora-studio\scripts\init-character-lora-project.ps1" `
@@ -124,4 +124,28 @@ plugins/character-lora-studio/
 README.md
 ```
 
-当前版本：`0.2.1`
+当前版本：`0.3.0`
+
+## 双包与分阶段项目管理
+
+候选图目标、合格图目标、包的用途、背景与画风策略都在角色项目配置中填写。
+不预设所有项目必须做两包，也不把某个角色的数量或身体特征写入插件。
+
+跨平台初始化与只读审计：
+
+```bash
+python3 "<技能目录>/scripts/project_tools.py" init "<项目目录>" --character-id my_character --display-name "角色名" --trigger my_character
+python3 "<技能目录>/scripts/project_tools.py" audit "<项目目录>"
+python3 "<技能目录>/scripts/project_tools.py" audit "<项目目录>" --ready-for-export --family anima --family krea2 --trigger my_character
+```
+
+审计检查清单、文件、hash、图片衍生关系和双 caption 状态，不替代图片解码、人体/身份审查和训练验证。
+已保存原始生成候选按 hash 去重统计；裁切、修图、双模型导出不能虚增生成量。
+从旧 schema 升级时先备份并转换副本，不以再次初始化覆盖旧记录。
+
+插件与 Hub 均可完成筛选和双模型标注；可先由插件处理，再在 Hub 二次审核。图片、Anima、Krea 2 的初审和二审分别记录；将审核后的图片 ID、hash、caption 与状态导出回项目目录。
+插件不包含 Hub API 客户端，不声称自动双向同步已实现。训练数据版本与运行记录分别冻结，
+使用旧 LoRA 加练时记录父 checkpoint，并为 Anima/Krea 2 分别建立训练谱系。
+详见技能中的 `references/project-management.md` 与 `references/staged-training.md`。
+
+开发验证：`python3 -m unittest discover -s tests -v`。

@@ -135,3 +135,15 @@ mirellevane, rabbit form, animal focus, solo, dark blue fur, white ear tips, gre
 - Outfit-only 是否混入角色触发词或单一穿着者偏置
 - Anima 是否残留 `newest`, `safe` 或质量标签
 - Krea 2 是否仍是机械 WD14 标签串
+
+## Default states and staged packs
+
+An absent accessory does not need a positive tag. A present default outfit, white
+background, or rendering medium remains a variable when the user wants to control it;
+"default" is not a blanket reason to omit it. Do not mechanically omit every fixed
+feature either: record one consistent concept-binding strategy and evaluate it.
+
+An image gets one stable ID and two independent caption paths/statuses. A visual
+approval does not imply either caption is reviewed. Edits to image pixels reset both
+caption reviews and invalidate affected frozen exports/caches. Captions describe the
+actual visible crop, not the full character sheet or the generation prompt.
