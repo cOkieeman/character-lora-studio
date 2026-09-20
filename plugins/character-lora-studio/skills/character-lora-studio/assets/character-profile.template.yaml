@@ -1,7 +1,8 @@
-schema_version: 2
+schema_version: 3
 character_id: "{{CHARACTER_ID}}"
 display_name: "{{DISPLAY_NAME}}"
 trigger: "{{TRIGGER}}"
+trigger_confirmed: false
 concept:
   type: character
   outfit_trigger: ""
@@ -84,3 +85,28 @@ regularization:
   forbidden_concepts: []
 
 notes: []
+
+# Project-specific targets. Null means undecided, never zero approved by implication.
+dataset_plan:
+  candidate_minimum: null
+  approved_target: null
+  packs: []
+  # Each pack: id, purpose, candidate_target, approved_target, background_policy,
+  # allowed_styles, fixed_features, variable_features. Counts are not universal defaults.
+  generation_provider: ""
+  generation_model: ""  # Keep unknown if the built-in tool does not expose its model.
+  batch_size: null
+  horizontal_flip: false
+  hub_project_id: ""
+  hub_dataset_id: ""
+
+training_plan:
+  family_order: []
+  stages: []
+  # Each stage: id, family, packs, parent_run_id, resume_mode,
+  # effective_sampling_weights, frozen_dataset_manifest, caption_manifest.
+  # Resume modes: fresh, weights_only, full_state (same-run recovery).
+
+review_policy:
+  primary_reviewer: ""  # plugin, hub, or user; all can curate and caption.
+  hub_second_review: optional  # optional or required, chosen by the user.

@@ -56,3 +56,13 @@ Use stable ASCII project IDs for paths and triggers where possible. Keep display
 Chinese explanations in management documents. Training captions remain family-compatible:
 Anima uses English Booru-style tags; Krea 2 uses English natural-language captions.
 Portable packages must replace device-specific absolute model paths with explicit placeholders.
+
+## Versioned pack management
+
+See [project-management.md](project-management.md) for stable image IDs, generated
+batches, model-specific caption files, coverage cells, and Hub review handoffs.
+Pack IDs are project choices. Reuse the same image IDs across family exports and
+training stages; an export copy is not a new candidate.
+
+Raw user files may remain in their original root paths with provenance recorded.
+Do not move or rewrite references merely to make the layout look uniform.

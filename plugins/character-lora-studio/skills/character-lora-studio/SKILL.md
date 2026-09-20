@@ -20,15 +20,18 @@ new work.
    `00_项目管理/图片清单.csv` when present.
 3. Verify folders, image-caption pairs, counts, target model families, concept type,
    trainer version, and hardware from disk before reporting status.
-4. For a new project, resolve the current Skill directory from the loaded Skill path and run the initializer by absolute path. Do not rely on `$PSScriptRoot` in an interactive PowerShell session:
+4. For a new project, resolve the current Skill directory and initialize with the
+   cross-platform standard-library helper (Python 3.9+):
 
-```powershell
-& '<SKILL_ROOT>\scripts\init-character-lora-project.ps1' `
-  -Root '<项目目录>' `
-  -CharacterId '<ASCII_ID>' `
-  -DisplayName '<角色或服装名>' `
-  -Trigger '<trigger>'
+```bash
+python3 "<SKILL_ROOT>/scripts/project_tools.py" init "<PROJECT_ROOT>" \
+  --character-id "<ASCII_ID>" --display-name "<DISPLAY_NAME>" --trigger "<TRIGGER>"
 ```
+
+Use `python` on Windows when appropriate. The PowerShell initializer remains available;
+both entry points use the same templates. Existing files are preserved; initialization
+is not a schema migration. Read [project-management.md](references/project-management.md)
+for batch ledgers, coverage tracking, Hub handoffs, and legacy inventory migration.
 
 5. Update `项目状态.md` after every completed batch, decision, export, smoke test, or training run.
 
@@ -73,6 +76,10 @@ Learn an intentionally inseparable character and signature outfit. This is simpl
 Learn rendering language while keeping subjects and scenes varied. Caption content accurately so the trigger absorbs style instead of recurring subject matter.
 
 Read [dataset-matrix.md](references/dataset-matrix.md) before setting counts and coverage.
+For separate identity/generalization packs or incremental training, also read
+[staged-training.md](references/staged-training.md). Keep candidate targets, approved
+targets, pack membership, and training sampling weights distinct. User quantities and
+style policies override example ranges; never raise body/age variation without agreement.
 
 For an Anima character project, also read
 [anima-character-workflow.md](references/anima-character-workflow.md) before
@@ -108,6 +115,15 @@ Read [captions.md](references/captions.md), [concept-binding.md](references/conc
 - For outfit LoRAs, define garment structure, palette, materials, patterns, accessories, and forbidden drift separately from any wearer.
 
 ### 3. Generate And Curate
+
+- Record the generator, exact prompt, reference roles, batch ID, and saved outputs.
+  Use the user's chosen generation route; use available built-in image generation
+  when no provider was specified. Unknown model identifiers stay unknown.
+- Only inspectable saved outputs count as generated candidates. Retries, errors,
+  duplicated exports, caption variants, and crops are not new independent generations.
+- Review fixed features as visible/correct, wrong, occluded, out-of-frame, or uncertain.
+  Separate intentional non-human anatomy from accidental extra limbs. Reserve uncertain
+  cases for review rather than deleting them to hit a quota.
 
 - Generate from the approved design sheet, not the latest arbitrary candidate.
 - Vary pose, camera, crop, background, lighting, wearer, and compatible style intentionally.
@@ -176,6 +192,10 @@ cache files in the standard migration tree.
 - Select a checkpoint by output evidence, not lowest loss alone.
 
 ## Persistent State Rules
+
+Use `project_tools.py audit <PROJECT_ROOT>` for read-only inventory checks. Before
+family export, add `--ready-for-export --family anima --trigger <TRIGGER>` (or `krea2`;
+repeat `--family` for both). This checks recorded files, not visual correctness or trainer readiness.
 
 After each material action, record:
 
