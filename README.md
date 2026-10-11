@@ -13,6 +13,8 @@
 - 按 GPU/VRAM/RAM 生成并审查 AnimaLoraStudio profile
 - 导出 Anima、Krea 2 训练交付与 Civitai 发布包
 - 使用固定测试提示词比较不同 epoch 或 step
+- 按统一 Markdown 模板生成模型介绍、版本更新、使用许可和角色版权说明
+- 根据已确认的角色来源选择原创、同人或授权文案；按模型族和版本整理发布包
 
 ## 安装
 

@@ -1,6 +1,6 @@
 ---
 name: character-lora-studio
-description: Build, resume, audit, tag, curate, regularize, configure, test, and export character, outfit, combined character-outfit, or style LoRA datasets with persistent on-disk state. Use for Anima Booru-tag workflows, Krea 2 natural-language workflows, hardware-aware AnimaLoraStudio profiles, candidate scoring, regularization, checkpoint comparison, or resuming a LoRA project after context loss.
+description: Build, resume, audit, tag, curate, regularize, configure, test, and export character, outfit, combined character-outfit, or style LoRA datasets with persistent on-disk state. Also generate model release descriptions and standardized release packages with source-aware character copyright notices and verified model licensing. Use for Anima, Krea 2, checkpoint comparison, model publishing preparation, or resuming a LoRA project.
 ---
 
 # Character LoRA Studio
@@ -190,6 +190,27 @@ cache files in the standard migration tree.
 - For stacked LoRAs, test the character and outfit separately before testing them together.
 - Compare early, middle, and late checkpoints for concept fidelity, leakage, anatomy, prompt response, and style drift.
 - Select a checkpoint by output evidence, not lowest loss alone.
+
+### 9. Prepare Model Descriptions And Release Packages
+
+For model descriptions, release notes, Snippets, licenses, character credits, or
+model release packages, read [publishing.md](references/publishing.md), then use
+[model-publishing-template.md](references/model-publishing-template.md) as the
+default description template. Do not invent a different format unless requested.
+
+- Resolve character source from recorded evidence, select the matching copyright
+  notice, and keep original, unofficial fan, and authorized characters distinct.
+- Resolve licenses from the actual model/base licenses and user-selected page
+  permissions. Character source does not determine the model's license.
+- Build one versioned release package per model family, using the layout in
+  `publishing.md`; keep training handoffs separate from model release artifacts.
+- Include the user-approved HTML release navigator for full release packages;
+  use `assets/release-navigation.reference.html` for its appearance, with actual
+  package contents and fixed provenance rather than the reference's demo data.
+- Missing source or license information produces a clearly marked draft with
+  pending items, not invented authorization or a publish-ready claim.
+- Preparation does not upload or publish. Preserve existing packages unless the
+  user requests their migration.
 
 ## Persistent State Rules
 

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "template_version": "model-publishing-template-v1",
+  "package_id": null,
+  "created_at": null,
+  "timezone": null,
+  "status": "draft",
+  "concept_type": null,
+  "character_id": null,
+  "display_name": null,
+  "family": null,
+  "version": null,
+  "trigger_words": [],
+  "checkpoint": {
+    "epoch": null,
+    "steps": null,
+    "model_file": null,
+    "sha256": null
+  },
+  "tested_base_model": {
+    "name": null,
+    "version": null,
+    "url": null
+  },
+  "license": {
+    "name": null,
+    "url": null,
+    "upstream_licenses": [],
+    "permissions": {
+      "commercial_images": null,
+      "paid_generation_services": null,
+      "sell_weights_or_merges": null,
+      "redistribution": null,
+      "derivatives": null,
+      "different_derivative_license": null,
+      "attribution_required": null
+    }
+  },
+  "character_source": {
+    "type": "unknown",
+    "work": null,
+    "creator": null,
+    "rights_holder": null,
+    "notice_variant": "pending_confirmation",
+    "authorization": {
+      "status": "unknown",
+      "provider": null,
+      "scope": null
+    }
+  },
+  "examples": [],
+  "files": [],
+  "pending_items": []
+}

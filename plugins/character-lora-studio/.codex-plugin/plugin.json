@@ -1,7 +1,7 @@
 {
   "name": "character-lora-studio",
   "version": "0.3.0",
-  "description": "Persistent character and outfit LoRA workflow with Anima and Krea 2 caption, training, regularization, testing, and export profiles.",
+  "description": "Persistent character and outfit LoRA workflow with Anima and Krea 2 caption, training, testing, source-aware release descriptions, licensing, and standardized release packages.",
   "author": {
     "name": "cOkieeman"
   },
@@ -9,7 +9,7 @@
   "interface": {
     "displayName": "角色 LoRA Studio",
     "shortDescription": "可恢复的角色与衣服 LoRA 双模型族工作流",
-    "longDescription": "将角色或衣服 LoRA 的设计、训练图矩阵、筛选评分、Anima Booru caption、Krea 2 自然语言 caption、正则集、硬件配置、平台导出与 checkpoint 测试固化为可跨任务恢复的本地流程。",
+    "longDescription": "将角色或衣服 LoRA 的设计、训练图矩阵、筛选评分、Anima Booru caption、Krea 2 自然语言 caption、正则集、硬件配置、平台导出与 checkpoint 测试固化为可跨任务恢复的本地流程；按统一模板生成模型说明、实际许可与角色来源版权文案，并整理可校验的模型发布包。",
     "developerName": "cOkieeman",
     "category": "Productivity",
     "capabilities": [],

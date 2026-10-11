@@ -7,6 +7,24 @@ concept:
   type: character
   outfit_trigger: ""
 
+# Publishing provenance. Unknown is intentional; never infer ownership from a name.
+character_source:
+  type: unknown  # original, fan, authorized, unknown, not_applicable
+  work: ""
+  creator: ""
+  rights_holder: ""
+  evidence: []  # Reviewed project-relative records or public source references.
+  authorization:
+    status: unknown  # unknown, none, confirmed
+    provider: ""
+    scope: ""
+    evidence: []
+
+publication:
+  template: model-publishing-template-v1
+  copyright_notice_mode: auto
+  releases: []  # Per-family/version facts and licenses; see references/publishing.md.
+
 target_platforms: []
 base_models:
   anima: ""

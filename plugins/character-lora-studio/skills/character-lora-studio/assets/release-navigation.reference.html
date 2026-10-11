@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>角色 LoRA · 发布包格式预览</title>
+  <style>
+    :root{color-scheme:dark;--bg:#121416;--panel:#191c20;--line:#2c3138;--text:#edf0f4;--muted:#a3aab5;--accent:#7ebaff}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 "Segoe UI","Microsoft YaHei",sans-serif}button{font:inherit;cursor:pointer}
+    header{max-width:1180px;margin:0 auto;padding:36px 26px 24px;display:flex;justify-content:space-between;align-items:center;gap:24px}h1{font-size:27px;letter-spacing:-.5px;margin:0 0 5px}p{margin:10px 0}header p{color:var(--muted);font-size:13px;margin:0}.badge{font-size:12px;border:1px solid #425544;color:#a9ccae;background:#202923;border-radius:6px;padding:5px 10px;white-space:nowrap}
+    .shell{max-width:1128px;margin:0 auto 32px;display:grid;grid-template-columns:284px minmax(0,1fr);border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}aside{border-right:1px solid var(--line);padding:24px 16px;background:#17191d}.eyebrow{font-size:11px;letter-spacing:1.4px;color:var(--muted);margin:0 8px 12px}.path{font:12px/1.7 Consolas,monospace;color:#bbc2cc;overflow-wrap:anywhere;margin:0 8px 20px}.file{display:block;text-align:left;width:100%;border:0;background:none;color:#c1c7d1;border-radius:5px;padding:8px 10px;font-size:13px}.file:hover{background:#232830}.file.active{background:#253243;color:#a8d0ff}.folder{font-size:12px;color:#87919f;margin:15px 10px 4px}.sub{padding-left:24px;font:12px/1.7 Consolas,monospace}.foot{margin:25px 8px 0;font-size:12px;color:#808995;line-height:1.8}
+    .toolbar{border-bottom:1px solid var(--line);padding:14px 26px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#1b1e22}.toolbar-title{font-size:13px;color:#cbd1da}.switch{display:flex;gap:4px}.switch button{border:1px solid var(--line);border-radius:4px;background:transparent;color:var(--muted);padding:3px 11px;font-size:12px}.switch button.active{color:#b8d8ff;background:#253243;border-color:#3f5a7e}
+    article{padding:28px 36px 38px;min-height:750px}.panel{display:none}.panel.active{display:block}.note{border-left:3px solid #627d9d;padding:8px 12px;background:#202731;font-size:12px;color:#b6c9e0;margin:0 0 24px}h2{font-size:23px;margin:0 0 12px;line-height:1.5}h3{font-size:16px;margin:0 0 12px;color:#e0e7f0}h4{font-size:14px;margin:16px 0 5px}hr{border:0;border-top:1px solid var(--line);margin:25px 0}.meta{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:12px;color:var(--muted);margin-bottom:20px}.muted{color:var(--muted);font-size:13px}code{font:13px/1.7 Consolas,monospace;color:#b6d8ff;background:#263141;padding:3px 7px;border-radius:4px}pre{padding:17px 20px;border:1px solid #303640;background:#121619;border-radius:6px;font:12px/1.85 Consolas,"Microsoft YaHei",monospace;color:#c7d0db;overflow:auto;white-space:pre-wrap}pre code{background:none;padding:0;color:inherit}ul{padding-left:22px;margin:10px 0}li{margin:5px 0}.source-options{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 20px}.source-options button{background:#20242a;color:#b8c0cb;border:1px solid var(--line);border-radius:4px;font-size:12px;padding:5px 10px}.source-options button.active{background:#253243;color:#b8d8ff;border-color:#3f5a7e}.placeholder{color:#b0b8c4}.sample-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.sample{border:1px solid var(--line);border-radius:6px;padding:14px;background:#161a1e}.sample .image{height:170px;display:grid;place-items:center;border:1px dashed #424b57;color:#8e98a7;background:#1e242c;font-size:13px;margin-bottom:12px}.sample p{font-size:12px}.sample code{font-size:11px}.files-table{width:100%;border-collapse:collapse;font-size:13px}.files-table td{padding:10px 0;border-bottom:1px solid var(--line);vertical-align:top}.files-table td:last-child{color:var(--muted);padding-left:16px}footer{max-width:1128px;margin:0 auto 30px;padding:0 4px;color:#868f9b;font-size:12px}
+    @media(max-width:780px){header{padding:22px 18px;align-items:flex-start}.shell{margin:0 12px 20px;grid-template-columns:1fr}aside{border-right:0;border-bottom:1px solid var(--line);padding:15px}.path,.eyebrow,.folder,.sub,.foot{display:none}.file{display:inline-block;width:auto;padding:6px 10px;font-size:12px}article{padding:23px 20px;min-height:0}.toolbar{padding:12px 20px}.sample-grid{grid-template-columns:1fr}h1{font-size:23px}h2{font-size:20px}footer{padding:0 18px}}
+  </style>
+</head>
+<body>
+  <header><div><h1>角色 LoRA · 发布包预览</h1><p>同一份确认数据，生成说明、许可、参数与文件清单。</p></div><span class="badge">格式演示 · 不含真实权重</span></header>
+  <div class="shell">
+    <aside>
+      <div class="eyebrow">RELEASE PACKAGE</div>
+      <div class="path">07_导出 / 模型发布 / YYYY-MM-DD / <span class="family">anima</span> /<br>demo_character-<span class="family">anima</span>-v001</div>
+      <button class="file" data-panel="overview">▤　README.md</button>
+      <button class="file active" data-panel="description">▤　模型说明.md</button>
+      <button class="file" data-panel="license">▤　使用许可与版权.md</button>
+      <button class="file" data-panel="settings">▤　推荐参数与提示词.md</button>
+      <div class="folder">▾　models /</div>
+      <button class="file sub" data-panel="weights">demo_character-<span class="family">anima</span>-v001.safetensors</button>
+      <div class="folder">▾　examples /</div>
+      <button class="file sub" data-panel="examples">001_portrait.png + .json</button>
+      <button class="file" data-panel="manifest">▤　manifest.json</button>
+      <button class="file" data-panel="hashes">▤　SHA256SUMS.txt</button>
+      <div class="foot">可选：workflows /、展示画廊.html<br>ZIP 放在包目录旁边。<br>训练集与中间权重单独保存。</div>
+    </aside>
+    <main>
+      <div class="toolbar"><span class="toolbar-title" id="current-file">模型说明.md</span><div class="switch" aria-label="模型族"><button class="active" data-family="anima">Anima</button><button data-family="krea2">Krea2</button></div></div>
+      <article>
+        <section class="panel active" id="description">
+          <div class="note">这里展示排版。角色名、提示词和参数均为示例；实际发布时读取当前版本记录。</div>
+          <h2>示例角色｜<span class="family-label">Anima</span> 角色 LoRA</h2>
+          <div class="meta"><span><strong>角色：</strong>示例角色</span><span><strong>版本：</strong>v001</span><span><strong>状态：</strong>格式草稿</span></div>
+          <p>以示例角色为主题制作的角色 LoRA。模型介绍在这里说明制作方向，以及当前版本经过测试的特点。</p>
+          <hr><h3>🔑 触发词 / Trigger word</h3><p><code>demo_character</code></p><p class="muted">这里只展示触发词样式；实际值保留训练时确认的拼写。</p>
+          <hr><h3>⚙️ 推荐设置 / Recommended settings</h3><ul><li><strong>测试底模：</strong><span class="placeholder">【实际底模名称与版本】</span></li><li><strong>LoRA 强度：</strong><span class="placeholder">【实测强度】</span></li><li><strong>Steps / CFG：</strong><span class="placeholder">【实测参数】</span></li></ul>
+          <hr><h3>📝 示例提示词 / Example prompt</h3><pre><code>【完整、经过测试的提示词，包含实际触发词和场景描述】</code></pre>
+          <hr><h3>👗 换装与画风 / Outfit &amp; style</h3><p>替换服装描述，保留希望延续的角色特征。叠加其他 LoRA 时，先确认角色模型单独使用的效果，再逐个加入。</p>
+          <hr><h3>📜 使用许可 / License</h3><p><strong>模型许可证：</strong><span class="placeholder">【实际许可证名称与全文链接】</span></p><p class="muted">许可按模型、底模和页面权限填写，不根据角色来源猜测商用权限。</p>
+          <hr><h3>🎨 角色来源与版权 / Character credits</h3><p class="muted">可在左侧“使用许可与版权.md”中切换来源，查看不同文案。</p>
+          <hr><h3>💬 返图与反馈 / Feedback</h3><p>欢迎返图。反馈时请附上模型版本、底模、完整提示词、LoRA 强度及生成参数，方便定位偏差。</p>
+        </section>
+        <section class="panel" id="overview"><h2>发布包导航</h2><p class="muted">一份模型族、一个实际版本、一个独立发布包。</p><hr><table class="files-table"><tr><td>模型说明.md</td><td>复制到发布页的完整正文</td></tr><tr><td>使用许可与版权.md</td><td>与正文一致的许可和来源说明</td></tr><tr><td>推荐参数与提示词.md</td><td>实测设置与完整可复制提示词</td></tr><tr><td>models /</td><td>选定的最终权重</td></tr><tr><td>examples /</td><td>已选原图与同名参数 JSON</td></tr><tr><td>manifest.json</td><td>版本、来源、许可及文件信息</td></tr><tr><td>SHA256SUMS.txt</td><td>校验文件内容是否完整</td></tr></table><hr><pre>07_导出/模型发布/YYYY-MM-DD/family/
+├─ character_id-family-version/
+│  ├─ README.md
+│  ├─ 模型说明.md
+│  ├─ 使用许可与版权.md
+│  ├─ 推荐参数与提示词.md
+│  ├─ models/
+│  ├─ examples/
+│  ├─ manifest.json
+│  └─ SHA256SUMS.txt
+└─ character_id-family-version-release.zip</pre></section>
+        <section class="panel" id="license"><div class="note">以下是角色来源选择的演示。实际插件根据已确认的项目记录选择；切换来源不会改变模型许可证。</div><h2>使用许可与版权</h2><h3>📜 使用许可 / License</h3><p><strong>模型许可证：</strong>【实际许可证名称与全文链接】</p><p>本模型权重的使用、转载、合并及商业用途，请遵守本页标注的许可证、使用权限，以及对应底模的许可条款。</p><p>模型的使用许可不包含对原作角色、原始素材或其他第三方内容的授权。</p><hr><h3>🎨 角色来源与版权 / Character credits</h3><div class="source-options" aria-label="角色来源"><button data-source="original">原创</button><button class="active" data-source="fan">非官方同人</button><button data-source="authorized">已授权</button><button data-source="unknown">来源待确认</button></div><div id="rights-notice"></div></section>
+        <section class="panel" id="settings"><div class="note">所有字段来自当前版本实测记录。此页面只演示格式，没有给出真实推荐数值。</div><h2>推荐参数与提示词</h2><ul><li><strong>模型族：</strong><span class="family-label">Anima</span></li><li><strong>底模：</strong>【名称、版本、公开链接】</li><li><strong>角色 LoRA / CLIP 强度：</strong>【实测值】</li><li><strong>Sampler / Scheduler：</strong>【实测值】</li><li><strong>Steps / CFG / 分辨率：</strong>【实测值】</li></ul><hr><h3>完整正向提示词</h3><pre>【完整、经过测试的提示词】</pre><h3>负面提示词</h3><p class="muted">只在实际使用且适用时保留；没有时删除这一整项。</p></section>
+        <section class="panel" id="examples"><h2>展示图与参数</h2><p class="muted">按用户选图编号；保留原文件编码，图像和参数使用同一名称。</p><hr><div class="sample-grid"><div class="sample"><div class="image">角色肖像原图</div><p><code>001_portrait.png</code></p><p>参数：001_portrait.json</p></div><div class="sample"><div class="image">换装测试原图</div><p><code>002_outfit.png</code></p><p>参数：002_outfit.json</p></div><div class="sample"><div class="image">场景展示原图</div><p><code>003_scene.jpg</code></p><p>参数：003_scene.json</p></div></div><hr><p>可分享的实际工作流放在 <code>workflows/</code>，与对应图片使用同一文件名。</p></section>
+        <section class="panel" id="weights"><div class="note">这是文件位置示意，不含任何权重文件。</div><h2>选定的最终模型</h2><p><code>demo_character-<span class="family">anima</span>-v001.safetensors</code></p><hr><ul><li>只放选定的最终权重；备选模型需明确用途。</li><li>模型族、版本、触发词和示例参数应相互对应。</li><li>复制后核对 SHA-256，保留权重内容。</li></ul></section>
+        <section class="panel" id="manifest"><h2>机器可读清单</h2><p class="muted">此处仅展示核心字段，完整结构已包含在插件资源中。</p><pre id="manifest-json"></pre></section>
+        <section class="panel" id="hashes"><h2>文件完整性校验</h2><p>使用包内相对路径，包含最终清单，不包含自身或外侧 ZIP。</p><pre>【SHA-256】  models/character_id-family-version.safetensors
+【SHA-256】  模型说明.md
+【SHA-256】  使用许可与版权.md
+【SHA-256】  推荐参数与提示词.md
+【SHA-256】  examples/001_portrait.png
+【SHA-256】  examples/001_portrait.json
+【SHA-256】  manifest.json</pre><hr><p class="muted">生成 ZIP 后解压到独立临时目录，再对照清单核验大小、路径和哈希。</p></section>
+      </article>
+    </main>
+  </div>
+  <footer>预览文件用于说明结构与排版；不是可上传的发布包。现有模型、训练集和发布包保持原位。</footer>
+  <script>
+    const names={overview:'README.md',description:'模型说明.md',license:'使用许可与版权.md',settings:'推荐参数与提示词.md',examples:'examples / 图像与参数',weights:'models / 最终权重',manifest:'manifest.json',hashes:'SHA256SUMS.txt'};
+    let family='anima',sourceType='fan';
+    function updateManifest(){document.querySelector('#manifest-json').textContent=JSON.stringify({schema_version:1,package_id:`demo_character-${family}-v001`,status:'draft',family,version:'v001',trigger_words:['demo_character'],license:{name:null,url:null},character_source:{type:sourceType,work:sourceType==='original'?null:'【示例原作】'},files:[],pending_items:['此文件仅用于格式演示']},null,2)}
+    document.querySelectorAll('[data-panel]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-panel],.panel').forEach(item=>item.classList.remove('active'));button.classList.add('active');document.getElementById(button.dataset.panel).classList.add('active');document.getElementById('current-file').textContent=names[button.dataset.panel]}));
+    document.querySelectorAll('[data-family]').forEach(button=>button.addEventListener('click',()=>{family=button.dataset.family;document.querySelectorAll('[data-family]').forEach(item=>item.classList.toggle('active',item===button));document.querySelectorAll('.family').forEach(item=>item.textContent=family);document.querySelectorAll('.family-label').forEach(item=>item.textContent=family==='anima'?'Anima':'Krea2');updateManifest()}));
+    const notices={original:'<p><strong>角色：</strong>示例角色<br><strong>角色设计 / 权利方：</strong>【已确认的信息】</p><p>本模型以原创角色为主题制作。角色设定及相关内容的使用范围，以权利方实际公布的授权为准；模型权重的许可不自动扩大角色内容的授权范围。</p>',fan:'<p><strong>角色：</strong>示例角色<br><strong>出自：</strong>【示例原作】<br><strong>原作者 / 权利方：</strong>【已确认的信息】</p><p>本模型为非官方粉丝制作，与原作官方不存在合作、授权或背书关系。角色及原作相关内容的权利归各自权利人所有。</p><p>本模型的发布不意味着原作角色可以自由商用。涉及商业用途时，请分别确认模型许可和原作权利人的授权要求。</p>',authorized:'<p><strong>授权方：</strong>【已确认的信息】<br><strong>授权范围：</strong>【覆盖模型制作与发布的实际范围】</p><p>本模型在上述授权范围内制作和发布。角色及原作相关权利仍归各自权利人所有。本模型的许可不扩大原授权范围，也不自动向使用者转授未包含在原授权中的权利。</p><p class="muted">仅在已核实授权依据及范围时，实际发布才使用这一段。</p>',unknown:'<p>涉及的角色及素材来源、权利方或授权范围尚未确认。本模型的许可不包含对相关第三方内容的授权。</p><div class="note">保留为草稿，列出具体待确认项；不标为可直接发布。</div>'};
+    document.querySelectorAll('[data-source]').forEach(button=>button.addEventListener('click',()=>{sourceType=button.dataset.source;document.querySelectorAll('[data-source]').forEach(item=>item.classList.toggle('active',item===button));document.getElementById('rights-notice').innerHTML=notices[sourceType];updateManifest()}));
+    document.getElementById('rights-notice').innerHTML=notices.fan;updateManifest();
+  </script>
+</body>
+</html>

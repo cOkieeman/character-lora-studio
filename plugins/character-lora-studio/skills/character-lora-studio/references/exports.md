@@ -74,6 +74,12 @@
 
 ## Civitai
 
+- 发布模型说明、许可证/版权文案或模型发布包时，必须先读
+  [publishing.md](publishing.md) 和
+  [model-publishing-template.md](model-publishing-template.md)。使用该模板的公开正文，
+  按角色来源选择版权说明；模型许可仍按实际底模与用户选择的页面权限填写。
+- 模型发布包统一采用 `publishing.md` 的日期、模型族、版本目录与文件命名。
+  本文前面的 `train/reg/config` 结构是训练导出，不是模型发布包。
 - 模型文件按实际 concept type、模型族、checkpoint 或 epoch 命名。
 - 填写 base model、epoch、steps、推荐 strength 和 trigger words。
 - Outfit LoRA 明确说明是否需要角色 LoRA、推荐叠加强度和已知身份泄漏。
