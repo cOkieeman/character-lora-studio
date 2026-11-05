@@ -10,12 +10,20 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$DisplayName,
 
-    [Parameter(Mandatory = $true)]
-    [ValidatePattern('^[a-z0-9][a-z0-9_-]*$')]
-    [string]$Trigger
+    [string]$Trigger = '',
+
+    [ValidateSet('character', 'outfit', 'character_outfit', 'style', 'cast')]
+    [string]$Concept = 'character'
 )
 
 $ErrorActionPreference = 'Stop'
+
+if ($Concept -eq 'cast') {
+    if ($Trigger) { throw 'Cast has per-character triggers; omit -Trigger and fill cast.characters.' }
+} elseif ($Trigger -notmatch '^[a-z0-9][a-z0-9_-]*$') {
+    throw 'A lowercase ASCII -Trigger is required for non-cast projects.'
+}
+if ($DisplayName -match '[\r\n]') { throw 'DisplayName must be a single line.' }
 
 $resolvedRoot = [System.IO.Path]::GetFullPath($Root)
 $skillRoot = Split-Path -Parent $PSScriptRoot
@@ -48,6 +56,9 @@ $replacements = @{
     '{{CHARACTER_ID}}' = $CharacterId
     '{{DISPLAY_NAME}}' = $DisplayName
     '{{TRIGGER}}' = $Trigger
+    '{{CONCEPT_TYPE}}' = $Concept
+    '{{ANIMA_PREFIX}}' = $(if ($Concept -eq 'cast') { '' } else { "1girl, $Trigger, solo" })
+    '{{TRIGGER_LIST}}' = $(if ($Concept -eq 'cast') { '[]' } else { ConvertTo-Json -InputObject @($Trigger) -Compress })
     '{{ROOT}}' = $resolvedRoot
     '{{TIMESTAMP}}' = $timestamp
 }
@@ -69,7 +80,7 @@ function New-FileFromTemplate {
     $content = Get-Content -LiteralPath $TemplatePath -Raw -Encoding UTF8
     foreach ($entry in $replacements.GetEnumerator()) {
         $value = [string]$entry.Value
-        if ($TemplatePath.EndsWith('.yaml')) {
+        if ($TemplatePath.EndsWith('.yaml') -and $entry.Key -ne '{{TRIGGER_LIST}}') {
             $quoted = ConvertTo-Json -InputObject $value -Compress
             $value = $quoted.Substring(1, $quoted.Length - 2)
         }

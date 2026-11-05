@@ -4,8 +4,16 @@ display_name: "{{DISPLAY_NAME}}"
 trigger: "{{TRIGGER}}"
 trigger_confirmed: false
 concept:
-  type: character
+  type: {{CONCEPT_TYPE}}
   outfit_trigger: ""
+
+# Used only for concept.type=cast (Krea 2); the root trigger stays empty.
+cast:
+  characters: []  # Each: id, trigger, class_noun, references, fixed, controllable, variable, forbidden_drift.
+  important_pairs: []
+  fixed_duo: false
+  project_manifest: ""  # Image paths relative to project root; approved training members only.
+  export_manifests: []  # Per frozen export: version, dataset_path, manifest_path.
 
 # Publishing provenance. Unknown is intentional; never infer ownership from a name.
 character_source:
@@ -40,7 +48,7 @@ hardware:
 forms:
   human:
     enabled: true
-    caption_prefix: "1girl, {{TRIGGER}}, solo"
+    caption_prefix: "{{ANIMA_PREFIX}}"
   alternate:
     enabled: false
     separate_lora: true
@@ -70,7 +78,7 @@ caption_profiles:
     enabled: false
     language: en
     style: booru_tags
-    prefix: "1girl, {{TRIGGER}}, solo"
+    prefix: "{{ANIMA_PREFIX}}"
     remove_tags:
       - newest
       - safe
@@ -98,8 +106,7 @@ training_profiles:
 regularization:
   enabled: false
   target_images: 0
-  forbidden_tags:
-    - "{{TRIGGER}}"
+  forbidden_tags: {{TRIGGER_LIST}}
   forbidden_concepts: []
 
 notes: []
@@ -113,6 +120,7 @@ dataset_plan:
   # allowed_styles, fixed_features, variable_features. Counts are not universal defaults.
   generation_provider: ""
   generation_model: ""  # Keep unknown if the built-in tool does not expose its model.
+  reference_roles: []  # Each: file, role(s), character_id (for cast), approved_scope.
   batch_size: null
   horizontal_flip: false
   hub_project_id: ""

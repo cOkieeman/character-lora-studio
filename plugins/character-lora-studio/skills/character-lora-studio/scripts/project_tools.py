@@ -15,6 +15,13 @@ from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
+from caption_triggers import (
+    check_caption_triggers,
+    has_token,
+    load_cast_manifest,
+    validate_cast_manifest,
+)
+
 ASSETS = Path(__file__).resolve().parent.parent / "assets"
 MANAGEMENT = "00_项目管理"
 DIRECTORIES = [
@@ -38,10 +45,15 @@ STATUSES = {"candidate", "needs_review", "needs_repair", "approved", "rejected",
 CAPTION_STATUSES = {"pending", "draft", "reviewed", "not_applicable"}
 HUB_STATUSES = {"not_requested", "pending", "approved", "changes_requested"}
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp"}
+CONCEPT_TYPES = ("character", "outfit", "character_outfit", "style", "cast")
 
 
-def initialize(root: Path, character_id: str, display_name: str, trigger: str) -> list[str]:
-    for value in (character_id, trigger):
+def initialize(root: Path, character_id: str, display_name: str, trigger: str = "", concept: str = "character") -> list[str]:
+    if concept not in CONCEPT_TYPES:
+        raise ValueError(f"Unknown concept type: {concept!r}")
+    if concept == "cast" and trigger:
+        raise ValueError("Cast projects use per-character manifest triggers; omit --trigger")
+    for value in ((character_id,) if concept == "cast" else (character_id, trigger)):
         if not re.fullmatch(r"[a-z0-9][a-z0-9_-]*", value):
             raise ValueError("Character ID and trigger must be lowercase ASCII identifiers")
     if any(c in display_name for c in "\r\n"):
@@ -49,13 +61,16 @@ def initialize(root: Path, character_id: str, display_name: str, trigger: str) -
     replacements = {
         "CHARACTER_ID": character_id, "DISPLAY_NAME": display_name, "TRIGGER": trigger,
         "ROOT": str(root), "TIMESTAMP": datetime.now().astimezone().isoformat(timespec="seconds"),
+        "CONCEPT_TYPE": concept,
+        "ANIMA_PREFIX": "" if concept == "cast" else f"1girl, {trigger}, solo",
+        "TRIGGER_LIST": json.dumps([] if concept == "cast" else [trigger]),
     }
     # Render everything before writing; JSON string escaping is valid in double-quoted YAML.
     rendered = {}
     for template, destination in TEMPLATES.items():
         content = (ASSETS / template).read_text(encoding="utf-8-sig")
         for key, value in replacements.items():
-            if template.endswith(".yaml"):
+            if template.endswith(".yaml") and key != "TRIGGER_LIST":
                 value = json.dumps(value, ensure_ascii=False)[1:-1]
             content = content.replace("{{" + key + "}}", value)
         rendered[destination] = content
@@ -92,7 +107,15 @@ def digest(path: Path) -> str:
     return checksum.hexdigest()
 
 
-def audit(root: Path, families: list[str], ready: bool, trigger: str, require_hub: bool = False) -> dict:
+def audit(root: Path, families: list[str], ready: bool, trigger: str, require_hub: bool = False,
+          cast_manifest: dict | None = None) -> dict:
+    if cast_manifest is not None:
+        if trigger:
+            raise ValueError("Use either trigger or cast_manifest, not both")
+        validate_cast_manifest(cast_manifest)
+    if ready and (not families or (not trigger and cast_manifest is None)):
+        raise ValueError("Export audit requires a family and either trigger or cast_manifest")
+    project_triggers = list(cast_manifest["characters"].values()) if cast_manifest is not None else ([trigger] if trigger else [])
     errors, warnings = [], []
     inventory = root / MANAGEMENT / "图片清单.csv"
     with inventory.open(encoding="utf-8-sig", newline="") as handle:
@@ -114,7 +137,7 @@ def audit(root: Path, families: list[str], ready: bool, trigger: str, require_hu
                     errors.append(f"{filename}: empty/duplicate {key}")
                 lookup[key][item[key]] = item["pack"]
     ids, paths, approved_hashes = set(), set(), {}
-    generated_hashes = set()
+    generated_hashes, approved_files = set(), set()
     states, by_pack, coverage, captions = Counter(), {}, Counter(), Counter()
     for index, row in enumerate(rows, 2):
         image_id = row.get("image_id", "")
@@ -126,6 +149,8 @@ def audit(root: Path, families: list[str], ready: bool, trigger: str, require_hu
             errors.append(f"{label}: missing/duplicate image_id")
         ids.add(image_id)
         category, status, pack = row["category"], row["status"], row["pack"]
+        if category in TRAIN_CATEGORIES and status == "approved":
+            approved_files.add(row["file"])
         for dimension in ("image", "anima", "krea2"):
             hub_status = row[f"hub_{dimension}_review_status"]
             if hub_status not in HUB_STATUSES:
@@ -198,8 +223,21 @@ def audit(root: Path, families: list[str], ready: bool, trigger: str, require_hu
                     text = caption_path.read_text(encoding="utf-8-sig").strip()
                     if not text:
                         errors.append(f"{label}: empty {family} caption")
-                    if trigger and not re.search(r"(?<![\w-])" + re.escape(trigger) + r"(?![\w-])", text):
-                        errors.append(f"{label}: missing exact trigger in {family} caption")
+                    if category == "regularization":
+                        errors.extend(
+                            f"{label}: {family} regularization caption contains forbidden project trigger: {token!r}"
+                            for token in project_triggers if has_token(text, token)
+                        )
+                    elif category in TRAIN_CATEGORIES and cast_manifest is not None and row["file"] in cast_manifest["images"]:
+                        visible = cast_manifest["images"][row["file"]]
+                        expected = [cast_manifest["characters"][identity] for identity in visible]
+                        forbidden = [token for identity, token in cast_manifest["characters"].items()
+                                     if identity not in visible]
+                        errors.extend(f"{label}: {family} caption {detail}"
+                                      for detail in check_caption_triggers(text, expected, forbidden))
+                    elif category in TRAIN_CATEGORIES and trigger:
+                        errors.extend(f"{label}: {family} caption {detail}"
+                                      for detail in check_caption_triggers(text, [trigger], []))
                 if caption_status == "reviewed" and not text:
                     errors.append(f"{label}: reviewed {family} caption has no content")
                 if category in TRAIN_CATEGORIES and status == "approved":
@@ -225,6 +263,13 @@ def audit(root: Path, families: list[str], ready: bool, trigger: str, require_hu
         errors.append("No approved training images")
     if ready and warnings:
         errors.append("Resolve unregistered training images before export")
+    if cast_manifest is not None:
+        missing_cast = approved_files - set(cast_manifest["images"])
+        for relative in sorted(missing_cast):
+            (errors if ready else warnings).append(f"Approved training image missing cast mapping: {relative}")
+        if ready:
+            for relative in sorted(set(cast_manifest["images"]) - approved_files):
+                errors.append(f"Stale cast mapping (not an approved training image): {relative}")
     return {
         "status": "FAIL" if errors else "PASS", "inventory_rows": len(rows),
         "generated_candidate_images_unique": len(generated_hashes),
@@ -243,24 +288,28 @@ def main() -> int:
     init.add_argument("root", type=Path)
     init.add_argument("--character-id", required=True)
     init.add_argument("--display-name", required=True)
-    init.add_argument("--trigger", required=True)
+    init.add_argument("--trigger", default="")
+    init.add_argument("--concept", choices=CONCEPT_TYPES, default="character")
     check = commands.add_parser("audit")
     check.add_argument("root", type=Path)
     check.add_argument("--family", action="append", choices=["anima", "krea2"], default=[])
     check.add_argument("--ready-for-export", action="store_true")
     check.add_argument("--require-hub-review", action="store_true")
-    check.add_argument("--trigger", default="")
+    trigger_source = check.add_mutually_exclusive_group()
+    trigger_source.add_argument("--trigger", default="")
+    trigger_source.add_argument("--cast-manifest", type=Path)
     args = parser.parse_args()
     try:
         root = args.root.expanduser().resolve()
         if args.command == "init":
-            print("\n".join(initialize(root, args.character_id, args.display_name, args.trigger)))
+            print("\n".join(initialize(root, args.character_id, args.display_name, args.trigger, args.concept)))
             return 0
-        if args.ready_for_export and (not args.family or not args.trigger):
-            parser.error("--ready-for-export requires --family and --trigger")
+        if args.ready_for_export and (not args.family or not (args.trigger or args.cast_manifest)):
+            parser.error("--ready-for-export requires --family and either --trigger or --cast-manifest")
         if args.require_hub_review and not args.ready_for_export:
             parser.error("--require-hub-review requires --ready-for-export")
-        report = audit(root, args.family, args.ready_for_export, args.trigger, args.require_hub_review)
+        cast = load_cast_manifest(args.cast_manifest) if args.cast_manifest else None
+        report = audit(root, args.family, args.ready_for_export, args.trigger, args.require_hub_review, cast)
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return int(report["status"] != "PASS")
     except (ValueError, OSError, csv.Error) as exc:

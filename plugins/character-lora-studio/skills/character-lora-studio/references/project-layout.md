@@ -1,7 +1,10 @@
-# Standard single-character project layout
+# Standard concept-level project layout
 
-Use one project root per character, outfit, combined character-outfit, or style LoRA.
+Use one project root per character, outfit, combined character-outfit, style, or cast LoRA.
 That root is the unit copied to another device and the unit referenced by project indexes.
+Several separately trained characters have separate roots; one jointly trained Krea 2
+cast shares one root, with per-member references and solo/pair packs. Do not migrate
+existing projects just to change this terminology.
 
 ```text
 角色项目/
@@ -63,6 +66,11 @@ See [project-management.md](project-management.md) for stable image IDs, generat
 batches, model-specific caption files, coverage cells, and Hub review handoffs.
 Pack IDs are project choices. Reuse the same image IDs across family exports and
 training stages; an export copy is not a new candidate.
+
+For Cast, keep project-relative membership in `00_项目管理/cast-project-v1.json`.
+Keep each frozen export's filename-relative manifest in management as a separate file.
+Use flat family/version training leaves for file audits; contact sheets, scripts,
+manifests and review reports stay outside the upload training folder.
 
 Raw user files may remain in their original root paths with provenance recorded.
 Do not move or rewrite references merely to make the layout look uniform.

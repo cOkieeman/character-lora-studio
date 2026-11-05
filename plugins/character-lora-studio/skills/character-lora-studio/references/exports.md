@@ -10,6 +10,12 @@
 - Concept type、模型族、caption profile 和 trainer version 已记录
 - 图片数量、caption 数量、生成日期和来源版本已记录
 
+先运行 `project_tools.py audit --ready-for-export` 核对账本，再用
+`audit_dataset.py` 检查实际平铺导出目录的图片解码、尺寸、配对和触发词；
+两者命令见 [dataset-tools.md](dataset-tools.md)。Cast 使用逐图成员 manifest，
+项目版与导出版按各自根目录映射路径，不给每张图要求同一个公共触发词。
+导出 manifest 保存在管理目录，避免被训练器当作素材上传。
+
 ## 双模型族导出
 
 同一素材同时训练 Anima 与 Krea 2 时使用两个独立导出树：

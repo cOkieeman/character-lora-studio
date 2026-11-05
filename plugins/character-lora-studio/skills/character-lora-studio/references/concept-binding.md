@@ -15,6 +15,10 @@
 ## 触发词设计
 
 - 使用唯一 ASCII 小写触发词，例如 `mirellevane` 或 `mirellenavyoutfit`。
+- 已经由用户确定的触发词保持原样。类别名默认是独立描述，不擅自把 `woman` 等追加进 token 定义。
+- Krea 2 Cast 每个成员独立配置触发词和身份锚点；只在其可见图片写该成员词。
+  根项目 ID 不进入每图 caption。多人成员和位置映射见
+  [Cast 流程](../../krea2-character-dataset-prep/references/cast-workflow.md)。
 - Character 与 outfit 分开训练时必须使用两个不同触发词。
 - Character-only caption 不应把某套非固定服装默认为角色身份。
 - Outfit-only caption 不得包含目标角色触发词。
@@ -32,6 +36,7 @@
 
 - 正则用于维持通用先验，不是目标概念补图。
 - 正则 caption 不得包含任何项目触发词。
+- Cast 正则排除全部成员词及目标身份组合；单人成员图属于目标数据，不属于正则集。
 - Character 正则排除与目标身份过近的脸、发型、发饰和专属组合。
 - Outfit 正则使用穿着普通、多样服装的人物，排除目标服装的完整结构、配色和配件组合。
 - 正则的镜头、宽高比和主体类型应接近训练集分布。

@@ -22,6 +22,14 @@ Use a stable ASCII `image_id`; it is not the current row number. Filenames need 
 be changed. A derived crop or repair has its own ID and a `parent_id`; preserve the
 original, and mark superseded versions so they do not silently remain approved.
 
+For a Krea 2 Cast, record member identities/triggers in `角色配置.yaml` and a versioned
+membership manifest under management. Each manifest path matches an approved training
+row's `file`, with a list of visible member IDs. Use `solo_a`, `solo_b`, `pair_ab` or
+other project-defined packs without changing the CSV schema. Root `trigger` stays empty.
+Run readiness audit with `--cast-manifest` instead of `--trigger`; regenerate the
+export-relative manifest from the same frozen rows. See
+[cast-workflow.md](../../krea2-character-dataset-prep/references/cast-workflow.md).
+
 ## Inventory fields
 
 - `category`: `source`, `design`, `training_candidate`, `formal`, `rejected`,
@@ -29,6 +37,19 @@ original, and mark superseded versions so they do not silently remain approved.
 - `status`: `candidate`, `needs_review`, `needs_repair`, `approved`, `rejected`,
   or `superseded`. A rejected row must have a reason. Approval is visual approval;
   export additionally requires the selected family's caption to be reviewed.
+  `approved` also means the active training selection, not every historically approved
+  copy. When copying an approved candidate into `04_正式训练集`, mark the original
+  `superseded` (keep its review evidence and `source_kind: generated`), and register
+  the formal copy with a new ID, `source_kind: derived`, `parent_id` pointing to the
+  original, and `status: approved`. Both hashes remain recorded; generation totals
+  count only the original. Keep only the current formal version approved. A superseded
+  formal row must change `category` to `training_candidate` (its path may remain in
+  the versioned archive); `formal` is reserved for the active approved selection.
+  Alternatively, move the candidate to the formal path and update its existing row
+  while preserving the generated original elsewhere with provenance. Do not create
+  two approved rows or leave an unregistered copy under `03`/`04`/`05`.
+  Final platform/family copies under `07_导出` are tracked by frozen export manifests,
+  not additional approved physical-image rows in the working inventory.
 - `source_kind`: `source`, `generated`, or `derived`. Only `generated` training
   rows count toward completed candidate generation. Preserve those rows after
   repair/rejection so the history remains countable.

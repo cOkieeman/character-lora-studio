@@ -56,6 +56,12 @@
 
 每套主要服装至少包含 2 张上半身和 1 张全身。默认服装需要更多正、侧、背结构信息。
 
+## Cast LoRA（Krea 2）
+
+Krea 2 多角色 Cast 使用独立的成员与配对矩阵，见
+[cast-workflow.md](../../krea2-character-dataset-prep/references/cast-workflow.md)。
+单角色数量不能直接当作整个阵容的总数量；镜头配额与角度/表情等交叉属性分别统计。
+
 ## Outfit LoRA
 
 单套复杂衣服 v1 建议 30–50 张。目标是稳定服装并解绑穿着者，因此“不同穿着者”比增加同一人的近重复图更重要。

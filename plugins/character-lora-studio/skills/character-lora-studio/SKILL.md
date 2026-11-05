@@ -1,13 +1,13 @@
 ---
 name: character-lora-studio
-description: Build, resume, audit, tag, curate, regularize, configure, test, and export character, outfit, combined character-outfit, or style LoRA datasets with persistent on-disk state. Also generate model release descriptions and standardized release packages with source-aware character copyright notices and verified model licensing. Use for Anima, Krea 2, checkpoint comparison, model publishing preparation, or resuming a LoRA project.
+description: Manage persistent character, outfit, combined, style, and Krea 2 multi-character cast LoRA projects, from dataset curation and captioning to training, checkpoint comparison, and release packages. Use for Anima or Krea 2 project orchestration and recovery; route Krea 2 candidate generation to the bundled specialist skill.
 ---
 
 # Character LoRA Studio
 
 Use the filesystem as the source of truth. Never rely on chat history alone for project decisions, counts, captions, trainer settings, or acceptance state.
 
-Every character project must use the standard single-character layout described in
+Every project uses the standard concept-level layout described in
 [project-layout.md](references/project-layout.md). The project root is the handoff and
 backup unit; do not create a second parallel `management` or `source_workspace` root for
 new work.
@@ -46,7 +46,7 @@ Do not overwrite an existing project. Do not permanently delete rejected images;
 
 Lock these before producing a large batch:
 
-- concept type: `character`, `outfit`, `character_outfit`, or `style`
+- concept type: `character`, `outfit`, `character_outfit`, `style`, or `cast` (Krea 2)
 - target model families: `anima`, `krea2`, or both
 - canonical trigger word and optional separate outfit trigger
 - fixed, controllable, and variable features for the selected concept type
@@ -75,6 +75,15 @@ Learn an intentionally inseparable character and signature outfit. This is simpl
 
 Learn rendering language while keeping subjects and scenes varied. Caption content accurately so the trigger absorbs style instead of recurring subject matter.
 
+### Cast (Krea 2)
+
+Learn multiple named identities in one LoRA. Give each member its own trigger and
+references; use explicit per-image membership, solo/pair coverage and position-swap
+tests. The cast project ID is not a shared identity trigger. Initialize with
+`--concept cast` and no `--trigger`, then fill `cast.characters` and its manifests.
+Separate character LoRAs keep separate project roots. Read
+[cast-workflow.md](../krea2-character-dataset-prep/references/cast-workflow.md).
+
 Read [dataset-matrix.md](references/dataset-matrix.md) before setting counts and coverage.
 For separate identity/generalization packs or incremental training, also read
 [staged-training.md](references/staged-training.md). Keep candidate targets, approved
@@ -93,6 +102,10 @@ Before captioning, exporting, or training, read the target family and never reus
 
 - **Anima**: English canonical Booru-style tags. Tag shuffle, keep-tokens, and tag dropout may apply when the verified trainer profile supports them.
 - **Krea 2**: English natural-language captions for Qwen3-VL. Do not treat comma-separated WD14 tags as the preferred format. Disable tag shuffle and tag dropout unless a specific verified experiment requires otherwise.
+- For Krea 2 caption drafting or review, also read [krea2-captioning.md](references/krea2-captioning.md). Select identity, outfit, combined, or style binding before applying its visible-image and garment-description rules.
+- For Krea 2 reference-driven candidate generation, replacement, or Cast dataset planning,
+  use the bundled [krea2-character-dataset-prep](../krea2-character-dataset-prep/SKILL.md).
+  It uses this project's directories and ledgers; no duplicate management root is needed.
 - When the same images target both families, export two separate image-caption trees. Never overwrite the project's reviewed source captions in place.
 - Krea 2 trains on Raw weights. Turbo is for testing and inference, not a training base.
 
@@ -104,6 +117,9 @@ Read [captions.md](references/captions.md), [concept-binding.md](references/conc
 
 - Inventory source art, CG, screenshots, generated candidates, captions, and existing trainer exports.
 - Build contact sheets with filenames for visual review.
+- Use `scripts/make_contact_sheets.py` for labeled sheets and `scripts/audit_dataset.py`
+  for image decoding, pairing, dimensions and caption-token checks. Read
+  [dataset-tools.md](references/dataset-tools.md) for their scope and invocation.
 - Distinguish canonical source art from inspiration-only references.
 - Preserve originals unchanged. Put crops, background removal, and edits in derived folders.
 
@@ -217,6 +233,10 @@ default description template. Do not invent a different format unless requested.
 Use `project_tools.py audit <PROJECT_ROOT>` for read-only inventory checks. Before
 family export, add `--ready-for-export --family anima --trigger <TRIGGER>` (or `krea2`;
 repeat `--family` for both). This checks recorded files, not visual correctness or trainer readiness.
+For Cast, replace `--trigger` with `--cast-manifest <PROJECT_MANIFEST_JSON>`; each
+approved training image must map to its visible members. Also audit the flat export
+with `audit_dataset.py` and a manifest relative to that export leaf. Neither check
+can prove visual identity or correct spatial attribution.
 
 After each material action, record:
 

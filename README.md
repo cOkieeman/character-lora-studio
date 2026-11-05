@@ -9,6 +9,9 @@
 - 规划角色镜头或衣服穿着者、视角、动作与结构覆盖
 - 筛选候选图并保留淘汰原因
 - 分别生成 Anima Booru caption 与 Krea 2 英文自然语言 caption
+- Krea 2 打标按训练目标选择身份绑定策略，并核对服装结构、实际穿着状态、姿态接触和可见光照
+- Krea 2 专项 Skill：参考图角色分工、全身锚点、候选生成与单角色/多人 Cast 配对矩阵
+- 文件审计与中文联系表：检查解码、尺寸、同名冲突、精确触发词及逐图 Cast 成员
 - 建立不含目标身份或目标服装组合的正则集
 - 按 GPU/VRAM/RAM 生成并审查 AnimaLoraStudio profile
 - 导出 Anima、Krea 2 训练交付与 Civitai 发布包
@@ -80,7 +83,7 @@ codex plugin add character-lora-studio@character-lora-studio
 
 脚本不会覆盖已经存在的项目管理文件。
 
-初始化后的项目统一采用单角色完整目录：
+初始化后的项目统一采用概念项目目录；一个 Cast 共用一根，分别训练的角色使用各自项目根：
 
 ```text
 角色项目/
@@ -123,10 +126,32 @@ codex plugin add character-lora-studio@character-lora-studio
 plugins/character-lora-studio/
   .codex-plugin/plugin.json
   skills/character-lora-studio/
+  skills/krea2-character-dataset-prep/
 README.md
 ```
 
-当前版本：`0.3.0`
+当前版本：`0.4.0`
+
+## Krea 2 数据集专项
+
+```text
+使用 $krea2-character-dataset-prep 根据这两位角色的参考图制作 Krea 2 Cast 数据集。
+```
+
+专项 Skill 与主 Skill 随同一个插件安装，共用标准目录、清单和脚本。
+数量及配对比例为实验起点，用户已定计划优先；参考图按脸、比例、服装、构图和画风分工。
+Cast 每个成员有独立触发词，逐图记录实际出场名单，不给所有单人图写全阵容词。
+
+```text
+python "<主技能目录>/scripts/project_tools.py" init "<项目目录>" --character-id cast_ab --display-name "双角色" --concept cast
+uv run --script "<主技能目录>/scripts/audit_dataset.py" "<平铺训练目录>" --cast-manifest "<导出成员清单.json>"
+uv run --script "<主技能目录>/scripts/make_contact_sheets.py" "<候选目录>" "<项目目录>/00_项目管理/review/b001"
+```
+
+两个图像工具需要 Pillow；`uv run --script` 按内联依赖运行，或使用已有 Pillow 环境。
+联系表输出使用新建/空目录。文件审计的重复 caption 默认警告，可用 `--strict` 严格处理。
+项目审计与文件审计分别核对账本和真实导出，均不能替代逐图身份/人体检查。
+详见 `references/dataset-tools.md` 和专项 Skill 的 `references/cast-workflow.md`。
 
 ## 双包与分阶段项目管理
 
@@ -150,4 +175,4 @@ python3 "<技能目录>/scripts/project_tools.py" audit "<项目目录>" --ready
 使用旧 LoRA 加练时记录父 checkpoint，并为 Anima/Krea 2 分别建立训练谱系。
 详见技能中的 `references/project-management.md` 与 `references/staged-training.md`。
 
-开发验证：`python3 -m unittest discover -s tests -v`。
+开发验证：`uv run --with Pillow python -m unittest discover -s tests -v`。
